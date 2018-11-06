@@ -1,6 +1,6 @@
 SRS = simclist.c
 TARGET = $(SRS:.c=)
-INC_PATH = ~/simclist/
+INC_PATH = ./simclist/
 CFLAGS = -static
 INFLAGS = -I $(INC_PATH)
 LDFLAGS = -L $(INC_PATH) $(LDLIBS)
