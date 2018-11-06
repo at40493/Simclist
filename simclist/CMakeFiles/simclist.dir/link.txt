@@ -1,0 +1,1 @@
+/usr/bin/cc  -fPIC -O2 -Wall -std=c99  -shared -Wl,-soname,libsimclist.so -o libsimclist.so CMakeFiles/simclist.dir/simclist.c.o 

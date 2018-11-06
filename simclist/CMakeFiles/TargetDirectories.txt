@@ -1,0 +1,3 @@
+/home/ned/simclist/CMakeFiles/edit_cache.dir
+/home/ned/simclist/CMakeFiles/rebuild_cache.dir
+/home/ned/simclist/CMakeFiles/simclist.dir
