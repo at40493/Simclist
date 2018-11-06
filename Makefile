@@ -5,6 +5,7 @@ CFLAGS = -static
 INFLAGS = -I $(INC_PATH)
 LDFLAGS = -L $(INC_PATH) $(LDLIBS)
 LDLIBS = -lsimclist
+CC = gcc
 
 all : clean $(TARGET)_dynamic $(TARGET)_static style
 

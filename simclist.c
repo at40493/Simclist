@@ -23,8 +23,9 @@ int main()
 		ret = -1;
 		goto exit;
 	}
-	num = strtol(str, &endptr, 10); //String to int
 	errno = 0 ; /* To distinguish success/failure after call */
+	num = strtol(str, &endptr, 10); //String to int
+
 
 	/* Check for various possible errors */
 
