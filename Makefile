@@ -1,29 +1,25 @@
-SRC = main.c
-OBJS = $(SRC:.c=.o)
-TARGET = main
-INC_PATH = /home/ned/simclist
-STATIC_FLAG = -Wl,-Bstatic
-DYNAMIC_FLAG = -Wl,-Bdynamic
-INFLAGS = -I $(INC_PATH)
-LDFLAGS = -L $(INC_PATH)
-STATIC_LIB = -lsimclist
-DYNAMIC_LIB= -lsimclist
-CC = gcc
+INC_PATH= /home/ned/simclist
+LDLIBS=-lsimclist
+LDFLAGS= -L $(INC_PATH)
+TARGET= main_dynamic main_static
+CC=gcc
 
-all : clean $(TARGET)_dynamic $(TARGET)_static style
-
-$(TARGET)_dynamic : $(OBJS)
-	$(CC) $< $(LDFLAGS) $(DYNAMIC_FLAG) $(DYNAMIC_LIB) -Wl,-rpath=$(INC_PATH) -o $@
-
-$(TARGET)_static : $(OBJS)
-	$(CC) $< $(LDFLAGS) $(STATIC_FLAG) $(STATIC_LIB) $(DYNAMIC_FLAG) -o $@ 
-
-%.o: %.c
-	$(CC) $(INFLAGS) -c $<
+all:
 	
-style:  $(SRC)
-	astyle --style=linux --indent=tab --pad-oper --unpad-paren $(SRC)
+	#build static
+	make main_static LDLIBS="-Wl,-Bstatic $(LDLIBS) -Wl,-Bdynamic "
+	
+	#build dynamic
+	make main_dynamic LDLIBS="-Wl,-Bdynamic $(LDLIBS) -Wl,-rpath=$(INC_PATH) "
+	
+	#clean
+	make clean
+	
+$(TARGET):%:main.o
+	$(CC) $< $(LDFLAGS) $(LDLIBS) -o $@
+
+style:  main.c
+	astyle --style=linux --indent=tab --pad-oper --unpad-paren main.c
 
 clean:
-	rm -f $(TARGET)_dynamic $(TARGET)_static 
-
+	rm -f *.o 
