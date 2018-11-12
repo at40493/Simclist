@@ -8,49 +8,72 @@
 int main()
 {
 	list_t list;
-	int num, ret = -1, *result;
-	char *str = NULL, *endptr;
-	size_t len = 0;
+	int ret = -1; // Default return failed.
 
 	if(list_init(&list) != 0) { // initial
 		fprintf(stderr, "Init failed\n");
 		return ret;
 	}
+
+	/* request to store copies, and provide the metric function */
+	list_attributes_copy(&list, list_meter_int32_t, 1);
+
+	fprintf(stdout, "End with a negative number\n");
 	fprintf(stdout, "Insert your number: ");
-	if(getline(&str, &len, stdin) <= 0) {
-		fprintf(stderr, "The input isn't a number.\n");
-		goto exit;
-	}
-	errno = 0 ; /* To distinguish success/failure after call */
-	num = strtol(str, &endptr, 10); //String to int
 
-	/* Check for various possible errors */
+	int num = 0; // input number
+	char *str = NULL, *endptr = NULL;
+	size_t len = 0;
+	while(getline(&str, &len, stdin) != -1) {
 
-	if(errno == ERANGE) {
-		perror("strtol");
-		goto exit;
+		errno = 0 ; /* To distinguish success/failure after call */
+		num = strtol(str, &endptr, 10); //String to int
+
+		/* Check for various possible errors */
+		if(errno == ERANGE) {
+			perror("strtol");
+			fprintf(stdout, "Insert your number: ");
+			continue;
+		}
+
+		if(endptr == str) {
+			fprintf(stderr, "No digits were found\n");
+			fprintf(stdout, "Insert your number: ");
+			continue;
+		}
+
+		if(num < 0) { // Exit the while loop.
+			ret = 0; // success
+			break;
+		}
+
+		if(list_append(&list, &num) < 0) { // Add an element to the list
+			fprintf(stderr, "Add num failed: %d.\n", num);
+			break; // Add failed.
+		}
+
+		fprintf(stdout, "Insert your number: ");
 	}
 
-	if(endptr == str) {
-		fprintf(stderr, "No digits were found\n");
-		goto exit;
-	}
 
-	if(list_append(&list, &num) < 0) { // Add an element to the list
-		fprintf(stderr, "Add data failed.\n");
-		goto exit;
-	}
-	result = (int*)list_get_at(&list, 0); // Get the first element.
-	if(result == NULL) {
-		fprintf(stderr, "Print the result failed.\n");
-		goto exit;
-	}
+	fprintf(stdout, "The result: \n");
 
-	fprintf(stdout, "Your number was: %d\n", *result);
-	ret = 0;
-exit:
+	int *data = NULL; // The data pointer.
+	int pos;// The position of list entry.
+	for(pos = 0 ; pos < list_size(&list) ; pos++) {
+		data = (int*)list_get_at(&list, pos); // Get the element.
+		if(data == NULL) {
+			fprintf(stderr, "Print the data failed.\n");
+			ret = -1;//print the data failed.
+			continue;
+		}
+
+		fprintf(stdout, "%d\n", *data);
+	}
+	
 	list_destroy(&list);
-	if(str != NULL) // str isn't NULL
+	if(str != NULL) // str isn't NULL.
 		free(str);
+	/* ret==0 is success, the other is failed. */
 	return ret;
 }
