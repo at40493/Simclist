@@ -2,6 +2,7 @@ INC_PATH= /home/ned/simclist
 LDLIBS=-lsimclist
 LDFLAGS= -L $(INC_PATH)
 TARGET= main_dynamic main_static
+CFLAGS = -I $(INC_PATH)
 CC=gcc
 
 all:
