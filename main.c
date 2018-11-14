@@ -19,7 +19,7 @@ int main()
 	list_attributes_copy(&list, list_meter_int32_t, 1);
 
 	fprintf(stdout, "End with a negative number\n");
-	fprintf(stdout, "Insert your number: ");
+	fprintf(stdout, "Insert your number: \n");
 
 	int num = 0; // input number
 	char *str = NULL, *endptr = NULL;
@@ -28,17 +28,15 @@ int main()
 
 		errno = 0 ; /* To distinguish success/failure after call */
 		num = strtol(str, &endptr, 10); //String to int
-
+		
 		/* Check for various possible errors */
 		if(errno == ERANGE) {
 			perror("strtol");
-			fprintf(stdout, "Insert your number: ");
 			continue;
 		}
 
 		if(endptr == str) {
 			fprintf(stderr, "No digits were found\n");
-			fprintf(stdout, "Insert your number: ");
 			continue;
 		}
 
@@ -52,11 +50,11 @@ int main()
 			break; // Add failed.
 		}
 
-		fprintf(stdout, "Insert your number: ");
+		
 	}
 
 
-	fprintf(stdout, "The result: \n");
+	fprintf(stdout, "The output: \n");
 
 	int *data = NULL; // The data pointer.
 	int pos;// The position of list entry.
@@ -72,8 +70,9 @@ int main()
 	}
 	
 	list_destroy(&list);
-	if(str != NULL) // str isn't NULL.
+	if(str != NULL) { // str isn't NULL.
 		free(str);
+	}
 	/* ret==0 is success, the other is failed. */
 	return ret;
 }
