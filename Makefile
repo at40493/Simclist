@@ -16,7 +16,7 @@ all:
 	#clean
 	make clean
 	
-$(TARGET):%:main.o
+$(TARGET):main.o
 	$(CC) $< $(LDFLAGS) $(LDLIBS) -o $@
 
 style:  main.c
